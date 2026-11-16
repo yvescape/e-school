@@ -1,0 +1,22 @@
+# PostgreSQL seul, pour le développement local et les tests.
+#   docker compose -f deploy/compose.dev.yml up -d
+name: e_school_dev
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: e_school
+      POSTGRES_PASSWORD: e_school
+      POSTGRES_DB: e_school
+    ports:
+      - "${DB_PORT:-5433}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U e_school"]
+      interval: 2s
+      retries: 15
+
+volumes:
+  db_data:
